@@ -2,11 +2,10 @@
   "name": "trendora",
   "version": "1.0.0",
   "description": "A modern e-commerce web application built with the MERN stack, GraphQL, and Material UI, featuring user authentication, admin dashboard, shopping cart, and Stripe payment integration.",
- "scripts": {
-  "start": "node src/app.js",
-  "dev": "nodemon src/app.js"
-},
-  
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
   "type": "module",
   "keywords": [
     "ecommerce",
@@ -31,7 +30,8 @@
     "express": "^5.1.0",
     "graphql": "^16.11.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.2"
+    "mongoose": "^8.19.2",
+    "stripe": "^19.3.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
