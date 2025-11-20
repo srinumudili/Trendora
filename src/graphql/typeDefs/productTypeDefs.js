@@ -1,6 +1,7 @@
 const productTypeDefs = `#graphql
 type Image{
     url:String!
+    publicId:String
 }
 
 type Review {

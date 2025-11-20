@@ -2,10 +2,8 @@ import Product from "../../models/Product.js";
 
 const productResolvers = {
   Query: {
-    // Fetch all products with pagination, filtering, and sorting
     getAllProducts: async (_, { filter, sort, page = 1, limit = 12 }) => {
       try {
-        // Build filter query
         const query = {};
 
         if (filter) {
@@ -41,7 +39,6 @@ const productResolvers = {
           }
         }
 
-        // Build sort query
         let sortQuery = {};
         if (sort) {
           switch (sort) {
@@ -67,16 +64,13 @@ const productResolvers = {
           sortQuery = { createdAt: -1 };
         }
 
-        // Calculate pagination
         const skip = (page - 1) * limit;
 
-        // Execute query
         const products = await Product.find(query)
           .sort(sortQuery)
           .limit(limit)
           .skip(skip);
 
-        // Get total count for pagination
         const totalProducts = await Product.countDocuments(query);
         const totalPages = Math.ceil(totalProducts / limit);
 
@@ -95,7 +89,6 @@ const productResolvers = {
       }
     },
 
-    // Get unique categories and brands for filters
     getProductFilters: async () => {
       try {
         const categories = await Product.distinct("category");
@@ -110,7 +103,6 @@ const productResolvers = {
       }
     },
 
-    //Fetch Product By Id
     getProductById: async (_, { id }) => {
       try {
         const product = await Product.findById(id).populate(
@@ -124,7 +116,6 @@ const productResolvers = {
       }
     },
 
-    // Search products
     searchProducts: async (_, { query, limit = 10 }) => {
       try {
         const products = await Product.find({
@@ -144,7 +135,6 @@ const productResolvers = {
   },
 
   Mutation: {
-    // Create a new Product
     createProduct: async (_, { input }, { user }) => {
       try {
         if (!user) {
@@ -164,7 +154,6 @@ const productResolvers = {
       }
     },
 
-    //Update a Product
     updateProduct: async (_, { id, input }, { user }) => {
       try {
         if (!user || user.role !== "admin") {
@@ -183,7 +172,6 @@ const productResolvers = {
       }
     },
 
-    // Delete a product
     deleteProduct: async (_, { id }, { user }) => {
       try {
         if (!user || user.role !== "admin") {
@@ -199,7 +187,6 @@ const productResolvers = {
       }
     },
 
-    //Add product review
     addProductReview: async (_, { productId, rating, comment }, { user }) => {
       try {
         if (!user) throw new Error("Unauthorized: Please login first");
@@ -239,7 +226,6 @@ const productResolvers = {
       }
     },
 
-    // Delete a review (Admin or review owner)
     deleteProductReview: async (_, { productId, reviewId }, { user }) => {
       try {
         if (!user) throw new Error("Unauthorized: Please login first");
@@ -250,7 +236,6 @@ const productResolvers = {
         const review = product.reviews.id(reviewId);
         if (!review) throw new Error("Review not found");
 
-        // Check if user is admin or review owner
         if (
           user.role !== "admin" &&
           review.user.toString() !== user._id.toString()
@@ -261,7 +246,6 @@ const productResolvers = {
         product.reviews.pull(reviewId);
         product.numReviews = product.reviews.length;
 
-        // Recalculate rating
         if (product.reviews.length > 0) {
           product.rating =
             product.reviews.reduce((acc, rev) => acc + rev.rating, 0) /
