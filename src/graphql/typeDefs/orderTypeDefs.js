@@ -1,11 +1,15 @@
 const orderTypeDefs = `#graphql
-type OrderItem{
-    product:ID!
-    name:String!
-    image:String! 
-    qty:Int!
-    price:Float!
+type OrderItem {
+  product: ID!
+  name: String!
+  image: String!
+  qty: Int!
+  price: Float!
+
+  size: String!
+  color: String!
 }
+
 
 type ShippingAddress{
     address:String!
@@ -15,11 +19,12 @@ type ShippingAddress{
 }
 
 type PaymentResult {
-  id: String
-  status: String
-  update_time: String
-  email_address: String
+  paymentIntentId: String!
+  status: String!
+  amount: Float!
+  currency: String!
 }
+
 
 type UserInfo {
   id: ID!
@@ -27,24 +32,36 @@ type UserInfo {
   email: String!
 }
 
-type Order{
-    id:ID!
-    user:UserInfo!
-    orderItems:[OrderItem!]!
-    shippingAddress:ShippingAddress!
-    paymentMethod: String!
-    paymentResult: PaymentResult
-    itemsPrice: Float!
-    shippingPrice: Float!
-    taxPrice: Float!
-    totalPrice: Float!
-    isPaid: Boolean!
-    paidAt: String
-    isDelivered: Boolean!
-    deliveredAt: String
-    createdAt: String
-    updatedAt: String
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }
+
+
+type Order {
+  id: ID!
+  user: UserInfo!
+  orderItems: [OrderItem!]!
+  shippingAddress: ShippingAddress!
+  paymentMethod: String!
+
+  status: OrderStatus!
+
+  paymentResult: PaymentResult
+  itemsPrice: Float!
+  shippingPrice: Float!
+  taxPrice: Float!
+  totalPrice: Float!
+
+  paidAt: String
+  deliveredAt: String
+  createdAt: String
+  updatedAt: String
+}
+
 
 type PaymentIntentResponse{
   clientSecret:String!
@@ -56,7 +73,11 @@ input OrderItemInput {
   image: String!
   qty: Int!
   price: Float!
+
+  size: String!
+  color: String!
 }
+
 
 input ShippingAddressInput {
   address: String!
@@ -90,8 +111,16 @@ type Query{
 
 type Mutation {
   createOrder(input: OrderInput!): Order
-  updateOrderToPaid(id: ID!, paymentResult: PaymentResultInput): String
+  updateOrderToPaid(
+  id: ID!
+  paymentResult: PaymentResultInput!
+): Order
+
   updateOrderToDelivered(id: ID!): String
+  updateOrderStatus(
+    id: ID!
+    status: OrderStatus!
+  ): Order
   cancelOrder(id: ID!): String
   createStripePaymentIntent(amount: Float!): PaymentIntentResponse
 }
