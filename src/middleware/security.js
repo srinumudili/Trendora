@@ -4,7 +4,7 @@ import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
 
 export const configureCORS = () => {
-  const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:3000"];
+  const allowedOrigins = ["http://localhost:3000", "http://localhost:4000"];
 
   return cors({
     origin: (origin, callback) => {
@@ -23,16 +23,51 @@ export const configureCORS = () => {
 };
 
 export const configureHelmet = () => {
+  // return helmet({
+  //   contentSecurityPolicy: {
+  //     directives: {
+  //       defaultSrc: ["'self'"],
+  //       styleSrc: ["'self'", "'unsafe-inline'"],
+  //       scriptSrc: ["'self'"],
+  //       imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
+  //     },
+  //   },
+  //   crossOriginEmbedderPolicy: false,
+  // });
+
   return helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
+
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://embeddable-sandbox.cdn.apollographql.com",
+        ],
+
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+
+        imgSrc: [
+          "'self'",
+          "data:",
+          "https://apollo-server-landing-page.cdn.apollographql.com",
+        ],
+
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+
+        frameSrc: ["'self'", "https://sandbox.embed.apollographql.com"],
+
+        connectSrc: [
+          "'self'",
+          "https://embeddable-sandbox.cdn.apollographql.com",
+        ],
+
+        manifestSrc: [
+          "https://apollo-server-landing-page.cdn.apollographql.com",
+        ],
       },
     },
-    crossOriginEmbedderPolicy: false,
   });
 };
 

@@ -13,21 +13,26 @@ type Review {
   createdAt: String
 }
 
-type Product{
-    id: ID!
-    name: String!
-    description: String!
-    price: Float!
-    stock: Int!
-    category: String!
-    brand: String
-    images: [Image!]!
-    rating: Float
-    reviews:[Review]
-    numReviews: Int
-    createdAt: String
-    updatedAt: String
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  stock: Int!
+  category: String!
+  brand: String
+  images: [Image!]!
+
+  sizes: [String!]!
+  colors: [String!]!
+
+  rating: Float
+  reviews: [Review]
+  numReviews: Int
+  createdAt: String
+  updatedAt: String
 }
+
 
 type Pagination {
   currentPage: Int!
@@ -77,7 +82,11 @@ input ProductInput {
   category: String!
   brand: String
   images: [ImageInput!]!
+
+  sizes: [String!]!
+  colors: [String!]!
 }
+
 
 type Query {
   getAllProducts(
