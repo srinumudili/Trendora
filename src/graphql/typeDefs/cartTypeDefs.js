@@ -1,12 +1,16 @@
 const cartTypeDefs = `#graphql
 type CartItem {
-    product: ID!
-    name: String!
-    image: String!
-    price: Float!
-    quantity: Int!
-    stock: Int!
-  }
+  product: ID!
+  name: String!
+  image: String!
+  price: Float!
+  quantity: Int!
+  stock: Int!
+
+  size: String!
+  color: String!
+}
+
 
   type Cart {
     id: ID!
@@ -19,17 +23,21 @@ type CartItem {
     updatedAt: String
   }
 
- input AddToCartInput {
-    productId: ID!
-    quantity: Int!
-    sessionId: String 
-  }
+input AddToCartInput {
+  productId: ID!
+  quantity: Int!
+  size: String!
+  color: String!
+  sessionId: String
+}
 
 input UpdateCartItemInput {
-    productId: ID!
-    quantity: Int!
-    sessionId: String
-  }
+  productId: ID!
+  quantity: Int!
+  size: String!
+  color: String!
+  sessionId: String
+}
 
 input RemoveFromCartInput {
     productId: ID!
