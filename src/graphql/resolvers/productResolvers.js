@@ -155,21 +155,22 @@ const productResolvers = {
     },
 
     updateProduct: async (_, { id, input }, { user }) => {
-      try {
-        if (!user || user.role !== "admin") {
-          throw new Error("Unauthorized: Admin access required");
-        }
-
-        const updatedProduct = await Product.findByIdAndUpdate(id, input, {
-          new: true,
-          runValidators: true,
-        });
-
-        if (!updatedProduct) throw new Error("Product not found");
-        return updatedProduct;
-      } catch (err) {
-        throw new Error("Error updating product: " + err.message);
+      if (!user || user.role !== "admin") {
+        throw new Error("Unauthorized");
       }
+
+      const product = await Product.findById(id);
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      Object.keys(input).forEach((key) => {
+        if (input[key] !== undefined && input[key] !== null) {
+          product[key] = input[key];
+        }
+      });
+
+      return await product.save();
     },
 
     deleteProduct: async (_, { id }, { user }) => {

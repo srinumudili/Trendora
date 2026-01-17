@@ -55,6 +55,17 @@ const productSchema = new mongoose.Schema(
         publicId: { type: String },
       },
     ],
+    sizes: {
+      type: [String],
+      required: true,
+      default: [],
+    },
+
+    colors: {
+      type: [String],
+      required: true,
+      default: [],
+    },
     rating: { type: Number, default: 0 },
     numReviews: { type: Number, default: 0 },
     reviews: [reviewSchema],

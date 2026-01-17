@@ -87,6 +87,19 @@ input ProductInput {
   colors: [String!]!
 }
 
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Float
+  stock: Int
+  category: String
+  brand: String
+  images: [ImageInput!]
+  sizes: [String!]
+  colors: [String!]
+}
+
+
 
 type Query {
   getAllProducts(
@@ -105,7 +118,7 @@ type Query {
 
 type Mutation {
   createProduct(input:ProductInput!):Product
-  updateProduct(id:ID!,input:ProductInput):Product
+  updateProduct(id:ID!,input:UpdateProductInput):Product
   deleteProduct(id:ID!):String
   addProductReview(productId: ID!,rating: Float!,comment: String!): String
   deleteProductReview(productId: ID!, reviewId: ID!): String
